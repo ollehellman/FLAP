@@ -280,19 +280,19 @@ contains
   !---------------------------------------------------------------------------------------------------------------------------------
   !< Get correct usage.
   !---------------------------------------------------------------------------------------------------------------------------------
-  class(command_line_argument), intent(in) :: self  !< CLAs group data.
-  character(*), optional,       intent(in) :: pref  !< Prefixing string.
-  logical, optional,            intent(in) :: markdown !< Format for markdown
-  character(len=:), allocatable            :: usage !< Usage string.
-  character(len=:), allocatable            :: prefd !< Prefixing string.
-  integer(I4P)                             :: a     !< Counter.
+  class(command_line_argument), intent(in) :: self      !< CLAs group data.
+  character(*), optional,       intent(in) :: pref      !< Prefixing string.
+  logical,      optional,       intent(in) :: markdown  !< Format for markdown
+  character(len=:), allocatable            :: usage     !< Usage string.
+  character(len=:), allocatable            :: prefd     !< Prefixing string.
+  integer(I4P)                             :: a         !< Counter.
   logical                                  :: markdownd !< Format for markdown
-  integer                                  :: indent !< how many spaces to indent
+  integer                                  :: indent    !< how many spaces to indent
   !---------------------------------------------------------------------------------------------------------------------------------
 
   !---------------------------------------------------------------------------------------------------------------------------------
-  markdownd=.false.; if (present(markdown)) markdownd=markdown
-  indent=4
+  markdownd = .false. ; if (present(markdown)) markdownd = markdown
+  indent = 4
   if (.not.self%is_hidden) then
     if (self%act==action_store) then
       if (.not.self%is_positional) then
@@ -305,18 +305,17 @@ contains
             usage = usage//' [value#1 value#2...]'
           case default
             do a=1, cton(str=trim(adjustl(self%nargs)),knd=1_I4P)
-              usage = usage//' value#'//trim(str(a,.true.))
+              usage = usage//' value#'//trim(str(a, .true.))
             enddo
           endselect
           if (trim(adjustl(self%switch))/=trim(adjustl(self%switch_ab))) then
-            if ( markdownd ) then
-              ! my line
+            if (markdownd) then
               usage = new_line('a')//'* `'//trim(adjustl(self%switch))//usage//'`, `'//trim(adjustl(self%switch_ab))//usage//'`'
             else
               usage = '   '//trim(adjustl(self%switch))//usage//', '//trim(adjustl(self%switch_ab))//usage
             endif
           else
-            if ( markdownd ) then
+            if (markdownd) then
               usage = new_line('a')//'* `'//trim(adjustl(self%switch))//usage//'`'
             else
               usage = '   '//trim(adjustl(self%switch))//usage
@@ -324,13 +323,13 @@ contains
           endif
         else
           if (trim(adjustl(self%switch))/=trim(adjustl(self%switch_ab))) then
-            if ( markdownd ) then
+            if (markdownd) then
               usage = new_line('a')//'* `'//trim(adjustl(self%switch))//' value`, `'//trim(adjustl(self%switch_ab))//' value'//'`'
             else
               usage = '   '//trim(adjustl(self%switch))//' value, '//trim(adjustl(self%switch_ab))//' value'
             endif
           else
-            if ( markdownd ) then
+            if (markdownd) then
               usage = new_line('a')//'* `'//trim(adjustl(self%switch))//' value`'
             else
               usage = '   '//trim(adjustl(self%switch))//' value'
@@ -350,13 +349,13 @@ contains
       endif
     else
       if (trim(adjustl(self%switch))/=trim(adjustl(self%switch_ab))) then
-        if ( markdownd ) then
+        if (markdownd) then
           usage = new_line('a')//'* `'//trim(adjustl(self%switch))//'`, `'//trim(adjustl(self%switch_ab))//'`'
         else
           usage = '   '//trim(adjustl(self%switch))//', '//trim(adjustl(self%switch_ab))
         endif
       else
-        if ( markdownd ) then
+        if (markdownd) then
           usage = new_line('a')//'* `'//trim(adjustl(self%switch))//'`'
         else
           usage = '   '//trim(adjustl(self%switch))
@@ -365,7 +364,8 @@ contains
     endif
     prefd = '' ; if (present(pref)) prefd = pref
     usage = prefd//usage
-    if (self%is_positional) usage = usage//new_line('a')//prefd//repeat(' ',indent)//trim(str(self%position,.true.))//'-th argument'
+    if (self%is_positional) usage = usage//new_line('a')//prefd//repeat(' ',indent)//trim(str(self%position, .true.))//&
+      '-th argument'
     if (allocated(self%envvar)) then
       if (self%envvar /= '') then
         usage = usage//new_line('a')//prefd//repeat(' ',10)//'environment variable name "'//trim(adjustl(self%envvar))//'"'
@@ -373,22 +373,22 @@ contains
     endif
     if (.not.self%is_required) then
       if (self%def /= '') then
-        if ( markdownd ) then
+        if (markdownd) then
           ! two spaces make a line break in markdown.
-          usage = usage//'  '//new_line('a')//prefd//repeat(' ',4)//'default value '//trim(replace_all(self%def,ARGS_SEP,' '))
+          usage = usage//'  '//new_line('a')//prefd//repeat(' ', 4)//'default value '//trim(replace_all(self%def,ARGS_SEP,' '))
         else
-          usage = usage//new_line('a')//prefd//repeat(' ',indent)//'default value '//trim(replace_all(self%def,ARGS_SEP,' '))
+          usage = usage//new_line('a')//prefd//repeat(' ', indent)//'default value '//trim(replace_all(self%def,ARGS_SEP,' '))
         endif
       endif
     endif
-    if (self%m_exclude/='') usage = usage//new_line('a')//prefd//repeat(' ',indent)//'mutually exclude "'//self%m_exclude//'"'
-    if ( markdownd ) then
+    if (self%m_exclude/='') usage = usage//new_line('a')//prefd//repeat(' ', indent)//'mutually exclude "'//self%m_exclude//'"'
+    if (markdownd) then
       usage = usage//'  '//new_line('a')//prefd//repeat(' ',4)//trim(adjustl(self%help))
-      if ( self%help_markdown /= '' ) then
+      if (self%help_markdown/='') then
         usage = usage//trim(adjustl(self%help_markdown))
       endif
     else
-      usage = usage//new_line('a')//prefd//repeat(' ',indent)//trim(adjustl(self%help))
+      usage = usage//new_line('a')//prefd//repeat(' ', indent)//trim(adjustl(self%help))
     endif
   else
     usage = ''
@@ -421,7 +421,7 @@ contains
             nargs = cton(str=trim(adjustl(self%nargs)),knd=1_I4P)
             signature = ''
             do a=1, nargs
-              signature = signature//' value#'//trim(str(a,.true.))
+              signature = signature//' value#'//trim(str(a, .true.))
             enddo
           endselect
         else
@@ -509,7 +509,7 @@ contains
       if (.not.self%is_positional) then
         self%error_message = prefd//self%progname//': error: named option "'//trim(adjustl(self%switch))//'" is required!'
       else
-        self%error_message = prefd//self%progname//': error: "'//trim(str(self%position,.true.))//&
+        self%error_message = prefd//self%progname//': error: "'//trim(str(self%position, .true.))//&
           '-th" positional option is required!'
       endif
     case(ERROR_CASTING_LOGICAL)
@@ -523,7 +523,7 @@ contains
         self%error_message = prefd//self%progname//': error: named option "'//trim(adjustl(self%switch))//&
           '" has not "nargs" value but an array has been passed to "get" method!'
       else
-        self%error_message = prefd//self%progname//': error: "'//trim(str(self%position,.true.))//'-th" positional option '//&
+        self%error_message = prefd//self%progname//': error: "'//trim(str(self%position, .true.))//'-th" positional option '//&
           'has not "nargs" value but an array has been passed to "get" method!'
       endif
     case(ERROR_NARGS_INSUFFICIENT)
@@ -537,10 +537,10 @@ contains
         endif
       else
         if (self%nargs=='+') then
-          self%error_message = prefd//self%progname//': error: "'//trim(str(self%position,.true.))//&
+          self%error_message = prefd//self%progname//': error: "'//trim(str(self%position, .true.))//&
             '-th" positional option requires at least 1 argument but no one remains'
         else
-          self%error_message = prefd//self%progname//': error: "'//trim(str(self%position,.true.))//&
+          self%error_message = prefd//self%progname//': error: "'//trim(str(self%position, .true.))//&
             '-th" positional option requires '//&
             trim(adjustl(self%nargs))//' arguments but no enough ones remain!'
         endif
@@ -551,7 +551,7 @@ contains
     case(ERROR_UNKNOWN)
       self%error_message = prefd//self%progname//': error: switch "'//trim(adjustl(switch))//'" is unknown!'
     case(ERROR_ENVVAR_POSITIONAL)
-      self%error_message = prefd//self%progname//': error: "'//trim(str(self%position,.true.))//'-th" positional option '//&
+      self%error_message = prefd//self%progname//': error: "'//trim(str(self%position, .true.))//'-th" positional option '//&
         'has "envvar" value that is not allowed for positional option!'
     case(ERROR_ENVVAR_NOT_STORE)
       self%error_message = prefd//self%progname//': error: named option "'//trim(adjustl(self%switch))//&
@@ -560,7 +560,7 @@ contains
       self%error_message = prefd//self%progname//': error: named option "'//trim(adjustl(self%switch))//&
         '" is an envvar that is not allowed for list valued option!'
     case(ERROR_STORE_STAR_POSITIONAL)
-      self%error_message = prefd//self%progname//': error: "'//trim(str(self%position,.true.))//'-th" positional option '//&
+      self%error_message = prefd//self%progname//': error: "'//trim(str(self%position, .true.))//'-th" positional option '//&
         'has "'//action_store_star//'" action that is not allowed for positional option!'
     case(ERROR_STORE_STAR_NARGS)
       self%error_message = prefd//self%progname//': error: named option "'//trim(adjustl(self%switch))//&

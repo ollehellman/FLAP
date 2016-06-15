@@ -259,27 +259,27 @@ contains
   !<
   !< @note If CLA belongs to a not yet present group it is created on the fly.
   !---------------------------------------------------------------------------------------------------------------------------------
-  class(command_line_interface), intent(inout) :: self        !< CLI data.
-  character(*), optional,        intent(in)    :: pref        !< Prefixing string.
-  character(*), optional,        intent(in)    :: group       !< Name of the grouped CLAs.
-  integer(I4P), optional,        intent(in)    :: group_index !< Index of the grouped CLAs.
-  character(*), optional,        intent(in)    :: switch      !< Switch name.
-  character(*), optional,        intent(in)    :: switch_ab   !< Abbreviated switch name.
-  character(*), optional,        intent(in)    :: help        !< Help message describing the CLA.
+  class(command_line_interface), intent(inout) :: self          !< CLI data.
+  character(*), optional,        intent(in)    :: pref          !< Prefixing string.
+  character(*), optional,        intent(in)    :: group         !< Name of the grouped CLAs.
+  integer(I4P), optional,        intent(in)    :: group_index   !< Index of the grouped CLAs.
+  character(*), optional,        intent(in)    :: switch        !< Switch name.
+  character(*), optional,        intent(in)    :: switch_ab     !< Abbreviated switch name.
+  character(*), optional,        intent(in)    :: help          !< Help message describing the CLA.
   character(*), optional,        intent(in)    :: help_markdown !< Longer help message, markdown formatted.
-  logical,      optional,        intent(in)    :: required    !< Flag for set required argument.
-  logical,      optional,        intent(in)    :: positional  !< Flag for checking if CLA is a positional or a named CLA.
-  integer(I4P), optional,        intent(in)    :: position    !< Position of positional CLA.
-  logical,      optional,        intent(in)    :: hidden      !< Flag for hiding CLA, thus it does not compare into help.
-  character(*), optional,        intent(in)    :: act         !< CLA value action.
-  character(*), optional,        intent(in)    :: def         !< Default value.
-  character(*), optional,        intent(in)    :: nargs       !< Number of arguments consumed by CLA.
-  character(*), optional,        intent(in)    :: choices     !< List of allowable values for the argument.
-  character(*), optional,        intent(in)    :: exclude     !< Switch name of the mutually exclusive CLA.
-  character(*), optional,        intent(in)    :: envvar      !< Environment variable from which take value.
-  integer(I4P), optional,        intent(out)   :: error       !< Error trapping flag.
-  type(command_line_argument)                  :: cla         !< CLA data.
-  integer(I4P)                                 :: g           !< Counter.
+  logical,      optional,        intent(in)    :: required      !< Flag for set required argument.
+  logical,      optional,        intent(in)    :: positional    !< Flag for checking if CLA is a positional or a named CLA.
+  integer(I4P), optional,        intent(in)    :: position      !< Position of positional CLA.
+  logical,      optional,        intent(in)    :: hidden        !< Flag for hiding CLA, thus it does not compare into help.
+  character(*), optional,        intent(in)    :: act           !< CLA value action.
+  character(*), optional,        intent(in)    :: def           !< Default value.
+  character(*), optional,        intent(in)    :: nargs         !< Number of arguments consumed by CLA.
+  character(*), optional,        intent(in)    :: choices       !< List of allowable values for the argument.
+  character(*), optional,        intent(in)    :: exclude       !< Switch name of the mutually exclusive CLA.
+  character(*), optional,        intent(in)    :: envvar        !< Environment variable from which take value.
+  integer(I4P), optional,        intent(out)   :: error         !< Error trapping flag.
+  type(command_line_argument)                  :: cla           !< CLA data.
+  integer(I4P)                                 :: g             !< Counter.
   !---------------------------------------------------------------------------------------------------------------------------------
 
   !---------------------------------------------------------------------------------------------------------------------------------
@@ -294,20 +294,20 @@ contains
       cla%switch_ab = switch_ab
     endif
   endif
-                                                if (present(switch_ab )) cla%switch_ab     = switch_ab
-  cla%help          = 'Undocumented argument' ; if (present(help      )) cla%help          = help
-  cla%help_markdown = '';                       if (present(help_markdown )) cla%help_markdown = help_markdown
-  cla%is_required   = .false.                 ; if (present(required  )) cla%is_required   = required
-  cla%is_positional = .false.                 ; if (present(positional)) cla%is_positional = positional
-  cla%position      = 0_I4P                   ; if (present(position  )) cla%position      = position
-  cla%is_hidden     = .false.                 ; if (present(hidden    )) cla%is_hidden     = hidden
-  cla%act           = action_store            ; if (present(act       )) cla%act           = trim(adjustl(Upper_Case(act)))
-                                                if (present(def       )) cla%def           = def
-                                                if (present(def       )) cla%val           = def
-                                                if (present(nargs     )) cla%nargs         = nargs
-                                                if (present(choices   )) cla%choices       = choices
-  cla%m_exclude     = ''                      ; if (present(exclude   )) cla%m_exclude     = exclude
-                                                if (present(envvar    )) cla%envvar        = envvar
+                                                if (present(switch_ab ))    cla%switch_ab     = switch_ab
+  cla%help          = 'Undocumented argument' ; if (present(help      ))    cla%help          = help
+  cla%help_markdown = ''                      ; if (present(help_markdown)) cla%help_markdown = help_markdown
+  cla%is_required   = .false.                 ; if (present(required  ))    cla%is_required   = required
+  cla%is_positional = .false.                 ; if (present(positional))    cla%is_positional = positional
+  cla%position      = 0_I4P                   ; if (present(position  ))    cla%position      = position
+  cla%is_hidden     = .false.                 ; if (present(hidden    ))    cla%is_hidden     = hidden
+  cla%act           = action_store            ; if (present(act       ))    cla%act           = trim(adjustl(Upper_Case(act)))
+                                                if (present(def       ))    cla%def           = def
+                                                if (present(def       ))    cla%val           = def
+                                                if (present(nargs     ))    cla%nargs         = nargs
+                                                if (present(choices   ))    cla%choices       = choices
+  cla%m_exclude     = ''                      ; if (present(exclude   ))    cla%m_exclude     = exclude
+                                                if (present(envvar    ))    cla%envvar        = envvar
   call cla%check(pref=pref) ; self%error = cla%error
   if (self%error/=0) then
     if (present(error)) error = self%error
@@ -574,9 +574,9 @@ contains
   ! parse CLI
   do g=0,size(ai,dim=1)-1
     if (ai(g,1)>0) then
-        call self%clasg(g)%parse(args=self%args(ai(g,1):ai(g,2)), pref=pref)
+      call self%clasg(g)%parse(args=self%args(ai(g,1):ai(g,2)), pref=pref)
     else
-        call self%clasg(g)%sanitize_defaults
+      call self%clasg(g)%sanitize_defaults
     endif
     self%error = self%clasg(g)%error
     if (self%error /= 0) exit
@@ -1617,13 +1617,13 @@ contains
   return
   !---------------------------------------------------------------------------------------------------------------------------------
   endsubroutine save_man_page
-  
-subroutine save_usage_to_markdown(self, markdown_file, error)
+
+  subroutine save_usage_to_markdown(self, markdown_file, error)
   !---------------------------------------------------------------------------------------------------------------------------------
   !< Save the CLI as a markdown page, for inclusion into the documentation.
   !---------------------------------------------------------------------------------------------------------------------------------
   class(command_line_interface), intent(in)  :: self               !< CLI data.
-  character(*),                  intent(in)  :: markdown_file           !< Output file name for saving man page.
+  character(*),                  intent(in)  :: markdown_file      !< Output file name for saving man page.
   integer(I4P), optional,        intent(out) :: error              !< Error trapping flag.
   character(len=:), allocatable              :: man                !< Man page.
   integer(I4P)                               :: idate(1:8)         !< Integer array for handling the date.
@@ -1645,7 +1645,7 @@ subroutine save_usage_to_markdown(self, markdown_file, error)
 
   !---------------------------------------------------------------------------------------------------------------------------------
   ! add the other tags here.
-  man = '' 
+  man = ''
   ! add the short description
   if (self%description /= '') man = man//new_line('a')//'### Short description'//new_line('a')//new_line('a')//self%description
   if (self%clasg(0)%Na>0) then
@@ -1668,7 +1668,7 @@ subroutine save_usage_to_markdown(self, markdown_file, error)
   close(u)
   return
   !---------------------------------------------------------------------------------------------------------------------------------
-endsubroutine save_usage_to_markdown
+  endsubroutine save_usage_to_markdown
 
   ! private methods
   subroutine errored(self, error, pref, group, switch)

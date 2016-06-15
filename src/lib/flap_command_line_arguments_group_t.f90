@@ -440,15 +440,15 @@ contains
   class(command_line_arguments_group), intent(in) :: self      !< CLAsG data.
   character(*), optional,              intent(in) :: pref      !< Prefixing string.
   logical,      optional,              intent(in) :: no_header !< Avoid insert header to usage.
-  logical,      optional,              intent(in) :: markdown  !< Format things form markdown
+  logical,      optional,              intent(in) :: markdown  !< Format things form markdown.
   character(len=:), allocatable                   :: usage     !< Usage string.
   integer(I4P)                                    :: a         !< Counters.
   character(len=:), allocatable                   :: prefd     !< Prefixing string.
-  logical                                         :: markdownd
+  logical                                         :: markdownd !< Markdonw format, local variable.
   !---------------------------------------------------------------------------------------------------------------------------------
 
   !---------------------------------------------------------------------------------------------------------------------------------
-  markdownd=.false.; if ( present(markdown) ) markdownd=markdown
+  markdownd = .false. ; if (present(markdown)) markdownd = markdown
   prefd = '' ; if (present(pref)) prefd = pref
   usage = self%progname ; if (self%group/='') usage = self%progname//' '//self%group
   usage = prefd//self%help//' '//usage//self%signature()
@@ -459,13 +459,15 @@ contains
   if (self%Na_required>0) then
     usage = usage//new_line('a')//new_line('a')//prefd//'Required switches:'
     do a=1, self%Na
-      if (self%cla(a)%is_required.and.(.not.self%cla(a)%is_hidden)) usage = usage//new_line('a')//self%cla(a)%usage(pref=prefd,markdown=markdownd)
+      if (self%cla(a)%is_required.and.(.not.self%cla(a)%is_hidden)) usage = usage//new_line('a')//&
+        self%cla(a)%usage(pref=prefd,markdown=markdownd)
     enddo
   endif
   if (self%Na_optional>0) then
     usage = usage//new_line('a')//new_line('a')//prefd//'Optional switches:'
     do a=1, self%Na
-      if (.not.self%cla(a)%is_required.and.(.not.self%cla(a)%is_hidden)) usage = usage//new_line('a')//self%cla(a)%usage(pref=prefd,markdown=markdownd)
+      if (.not.self%cla(a)%is_required.and.(.not.self%cla(a)%is_hidden)) usage = usage//new_line('a')//&
+        self%cla(a)%usage(pref=prefd,markdown=markdownd)
     enddo
   endif
   return
@@ -514,11 +516,11 @@ contains
       else
         self%error_message = prefd//self%progname//': error: consistency error:'
       endif
-      self%error_message = self%error_message//' "'//trim(str(a1,.true.))//&
-        '-th" option has the same switch or abbreviated switch of "'//trim(str(a2,.true.))//'-th" option:'//new_line('a')
-      self%error_message = self%error_message//prefd//' CLA('//trim(str(a1,.true.)) //') switches = '//self%cla(a1)%switch //' '//&
+      self%error_message = self%error_message//' "'//trim(str(a1, .true.))//&
+        '-th" option has the same switch or abbreviated switch of "'//trim(str(a2, .true.))//'-th" option:'//new_line('a')
+      self%error_message = self%error_message//prefd//' CLA('//trim(str(a1, .true.)) //') switches = '//self%cla(a1)%switch //' '//&
         self%cla(a1)%switch_ab//new_line('a')
-      self%error_message = self%error_message//prefd//' CLA('//trim(str(a2,.true.))//') switches = '//self%cla(a2)%switch//' '//&
+      self%error_message = self%error_message//prefd//' CLA('//trim(str(a2, .true.))//') switches = '//self%cla(a2)%switch//' '//&
                          self%cla(a2)%switch_ab
     case(ERROR_M_EXCLUDE)
       self%error_message = prefd//self%progname//': error: the group "'//self%group//'" and "'//self%m_exclude//'" are mutually'//&
